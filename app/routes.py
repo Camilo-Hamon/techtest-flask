@@ -1,9 +1,12 @@
 from .services.transaction_importer import import_transactions_from_csv
 from .services.fraud_detector import detect_fraudulent_transactions
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 
 from io import TextIOWrapper
+
+import threading
+import requests
 
 main = Blueprint('main', __name__)
 
@@ -66,3 +69,44 @@ def detect_fraud():
     """
     count = detect_fraudulent_transactions()
     return {"message": f"{count} suspicious transactions detected."}, 200
+
+@main.route('/tasks', methods=['POST'])
+def simulate_task_queue():
+    """
+    Simulates Google Cloud Task delivery by receiving the task payload and 
+    dispatching it asynchronously to the real processing endpoint (/process-fraud).
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid payload"}), 400
+
+    # Dispatch asynchronously
+    thread = threading.Thread(target=forward_to_process_fraud, args=(data,))
+    thread.start()
+
+    return jsonify({"message": "Task accepted and will be processed"}), 202
+
+def forward_to_process_fraud(data):
+    """
+    Sends the task payload to the /process-fraud endpoint asynchronously.
+    """
+    try:
+        requests.post("http://localhost:5000/process-fraud", json=data)
+        print(f"Task dispatched to /process-fraud: {data}")
+    except Exception as e:
+        print(f"Failed to forward task: {e}")
+
+
+@main.route('/process-fraud', methods=['POST'])
+def process_fraud():
+    """
+    Endpoint to process a fraudulent transaction that was enqueued via the task queue.
+    """
+    data = request.get_json()
+    transaction_id = data.get('transaction_id')
+    reason = data.get('reason')
+
+    print(f"🚨 Processing fraud case: Transaction {transaction_id} - Reason: {reason}")
+    # Aquí puedes extender la lógica para alertas, auditorías, etc.
+
+    return '', 200

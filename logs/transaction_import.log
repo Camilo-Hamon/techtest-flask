@@ -1,10 +1,19 @@
-2025-04-12 14:48:37,736 [INFO] Created new user with id 1
-2025-04-12 14:48:37,744 [INFO] Created new user with id 4
-2025-04-12 14:48:37,747 [INFO] Created new user with id 10
-2025-04-12 14:48:37,749 [INFO] Created new user with id 3
-2025-04-12 14:48:37,752 [INFO] Created new user with id 8
-2025-04-12 14:48:37,755 [INFO] Created new user with id 2
-2025-04-12 14:48:37,758 [INFO] Created new user with id 9
-2025-04-12 14:48:37,762 [INFO] Created new user with id 6
-2025-04-12 14:48:37,766 [INFO] Created new user with id 7
-2025-04-12 14:48:37,770 [INFO] Created new user with id 5
+2025-04-12 16:58:08,558 [INFO] Created new user with id 1
+2025-04-12 16:58:08,568 [INFO] Created new user with id 4
+2025-04-12 16:58:08,570 [INFO] Created new user with id 10
+2025-04-12 16:58:08,572 [INFO] Created new user with id 3
+2025-04-12 16:58:08,577 [INFO] Created new user with id 8
+2025-04-12 16:58:08,587 [INFO] Created new user with id 2
+2025-04-12 16:58:08,590 [INFO] Created new user with id 9
+2025-04-12 16:58:08,594 [INFO] Created new user with id 6
+2025-04-12 16:58:08,597 [INFO] Created new user with id 7
+2025-04-12 16:58:08,600 [INFO] Created new user with id 5
+2025-04-12 16:58:19,751 [INFO] Enqueued task | Transaction ID: 1 | Reason: Transaction amount exceeds $5000 | Status: 202
+2025-04-12 16:58:19,786 [INFO] Enqueued task | Transaction ID: 414 | Reason: Transactions from different countries within 5 minutes | Status: 202
+2025-04-12 16:58:19,828 [INFO] Enqueued task | Transaction ID: 478 | Reason: Transactions from different countries within 5 minutes | Status: 202
+2025-04-12 16:58:19,868 [INFO] Enqueued task | Transaction ID: 51 | Reason: Transaction amount exceeds $5000 | Status: 202
+2025-04-12 16:58:19,901 [INFO] Enqueued task | Transaction ID: 83 | Reason: Transactions from different countries within 5 minutes | Status: 202
+2025-04-12 16:58:19,922 [INFO] Enqueued task | Transaction ID: 151 | Reason: Transaction amount exceeds $5000 | Status: 202
+2025-04-12 16:58:19,948 [INFO] Enqueued task | Transaction ID: 351 | Reason: Transaction amount exceeds $5000 | Status: 202
+2025-04-12 16:58:19,993 [INFO] Enqueued task | Transaction ID: 451 | Reason: Transaction amount exceeds $5000 | Status: 202
+2025-04-12 16:58:20,023 [INFO] Enqueued task | Transaction ID: 251 | Reason: Transaction amount exceeds $5000 | Status: 202
