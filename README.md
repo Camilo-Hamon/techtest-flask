@@ -1,4 +1,5 @@
 CSV file used for the general test: https://drive.google.com/file/d/182y9RJDL4ofNhn-w1wnEJpE0CrXXmW7M/view?usp=sharing
+.env file used: https://docs.google.com/document/d/1YLYgLt2uj40E7pTYtE9ETQhoB1CteqxWYSruQh05VNk/edit?usp=sharing
 
 Pending:
 
