@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subir CSV</title>
+</head>
+<body>
+    <h1>Sube tu archivo CSV</h1>
+    <form action="{{ url_for('main.upload_file') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Subir</button>
+    </form>
+</body>
+</html>
