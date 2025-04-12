@@ -25,9 +25,9 @@ def validate_transaction_row(row):
 
     # Validate date format
     try:
-        datetime.strptime(row['date'], '%Y-%m-%d')  # Example: 2024-12-31
+        datetime.strptime(row['date'], '%Y-%m-%d %H:%M:%S')  # Example: 2024-12-31
     except ValueError:
-        return False, f"Invalid date format: {row['date']} (expected YYYY-MM-DD)"
+        return False, f"Invalid date format: {row['date']} (expected YYYY-MM-DD HH:MM:SS)"
 
     return True, None
 
@@ -74,15 +74,19 @@ def import_transactions_from_csv(file_stream):
                     logger.info(f"Created new user with id {user_id}")
                 known_users[user_id] = user  # Cache user
 
+            date_str = row['date']
+            parsed_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+
             # Create transaction
             transaction = Transaction(
-                date=row['date'],
+                date=parsed_date,
                 description=row['description'],
                 amount=float(row['amount']),
                 category=row.get('category'),
                 payment_method=row.get('payment_method'),
                 transaction_type=row.get('transaction_type'),
                 currency=row.get('currency', 'USD'),
+                location_country=row.get('location_country'),
                 user_id=user_id
             )
             transactions.append(transaction)

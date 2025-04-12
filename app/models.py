@@ -25,7 +25,7 @@ class Transaction(db.Model):
     Each transaction is linked to a specific user.
     """
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     amount = db.Column(db.Float, nullable=False)
 
@@ -33,6 +33,7 @@ class Transaction(db.Model):
     payment_method = db.Column(db.String(50), nullable=True)
     transaction_type = db.Column(db.String(20), nullable=True)  # "income" or "expense"
     currency = db.Column(db.String(10), nullable=True, default="USD")
+    location_country = db.Column(db.String(100), nullable=True)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -42,3 +43,16 @@ class Transaction(db.Model):
 
     def __repr__(self):
         return f"<Transaction {self.id} - {self.description}>"
+
+class SuspiciousTransaction(db.Model):
+    """
+    Stores transactions flagged as potentially fraudulent.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    reason = db.Column(db.String(255), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<SuspiciousTransaction {self.transaction_id} - {self.reason}>"

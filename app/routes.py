@@ -1,4 +1,5 @@
 from .services.transaction_importer import import_transactions_from_csv
+from .services.fraud_detector import detect_fraudulent_transactions
 
 from flask import Blueprint, render_template, request
 
@@ -53,3 +54,15 @@ def upload_file():
             return f"Import failed: {e}", 500
 
     return render_template('upload.html')
+
+@main.route('/detect-fraud', methods=['POST'])
+def detect_fraud():
+    """
+    Endpoint to detect fraudulent transactions based on pre-defined rules.
+    Saves suspicious transactions in the SuspiciousTransaction table.
+
+    Returns:
+        JSON: Number of suspicious transactions detected.
+    """
+    count = detect_fraudulent_transactions()
+    return {"message": f"{count} suspicious transactions detected."}, 200
