@@ -1,14 +1,15 @@
+from .services.transaction_importer import import_transactions_from_csv
+
 from flask import Blueprint, render_template, request
 
 from io import TextIOWrapper
-
-import csv
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
     return render_template('index.html')
+
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -17,7 +18,9 @@ def upload_file():
 
     GET: Renders a simple HTML form to upload a CSV file.
     POST: Processes the uploaded file, reads its content using the csv module,
-          and prints each row to the console.
+          parses its content, and stores each transaction in the database.
+          Expected CSV columns:
+          date, description, amount, category, payment_method, transaction_type, currency
 
     Returns:
         - If GET: Renders the 'upload.html' template with the upload form.
@@ -26,25 +29,27 @@ def upload_file():
             - 200 OK if file is successfully processed.
     """
     if request.method == 'POST':
-        # Attempt to retrieve the uploaded file from the form field named 'file'
         file = request.files.get('file')
 
         if not file:
-            # No file was uploaded or field was empty
             return "No file was uploaded", 400
 
-        # Wrap the uploaded file in a TextIOWrapper to treat it as a text stream
-        # This is necessary because Flask handles uploaded files as binary streams
         wrapped_file = TextIOWrapper(file, encoding='utf-8')
+        user_id = 1  # Temporal
 
-        # Use Python's built-in CSV reader to iterate over the rows
-        reader = csv.reader(wrapped_file)
+        try:
+            success_count, error_rows = import_transactions_from_csv(wrapped_file)
 
-        print("CSV file content:")
-        for row in reader:
-            print(row)  # Print each row to the server console
+            if error_rows:
+                error_msg = f"{success_count} transactions imported. {len(error_rows)} rows failed."
+                print("Errores encontrados:")
+                for i, err, row in error_rows:
+                    print(f"Row {i}: {err} — {row}")
+                return error_msg, 207  # 207: Multi-Status (partially success)
+            
+            return f"{success_count} transactions imported successfully!", 200
 
-        return "File received and processed successfully", 200
+        except Exception as e:
+            return f"Import failed: {e}", 500
 
-    # For GET requests, show the upload form
     return render_template('upload.html')

@@ -1,8 +1,12 @@
 from dotenv import load_dotenv
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 import os
+
+# Create the SQLAlchemy instance
+db = SQLAlchemy()
 
 def create_app():
     """
@@ -14,6 +18,9 @@ def create_app():
     Returns:
         Flask app instance
     """
+    # Load environment variables
+    load_dotenv()
+
     # Create the Flask application instance
     app = Flask(__name__)
 
@@ -26,6 +33,9 @@ def create_app():
         app.config.from_object('config.TestingConfig')
     else:
         app.config.from_object('config.DevelopmentConfig')
+
+    # Initialize extensions
+    db.init_app(app)
 
     # Import and register the main blueprint that contains routes
     from .routes import main

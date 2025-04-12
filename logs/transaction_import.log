@@ -1,0 +1,9 @@
+2025-04-12 12:21:12,793 [INFO] Created new user with id 4
+2025-04-12 12:21:12,803 [INFO] Created new user with id 1
+2025-04-12 12:21:12,804 [ERROR] [Row 4] Unexpected error: invalid literal for int() with base 10: 'n' — Data: {'date': '2023-03-15', 'description': 'Transaction 4', 'amount': '-187.22', 'category': 'Entertainment', 'payment_method': 'Cash', 'transaction_type': 'expense', 'currency': 'EUR', 'user_id': 'n'}
+2025-04-12 12:21:12,807 [INFO] Created new user with id 2
+2025-04-12 12:21:12,813 [INFO] Created new user with id 5
+2025-04-12 12:21:12,814 [WARNING] [Row 15] Invalid date format: 2023/10-28 (expected YYYY-MM-DD) — Data: {'date': '2023/10-28', 'description': 'Transaction 15', 'amount': '342.99', 'category': 'Salary', 'payment_method': 'Debit Card', 'transaction_type': 'income', 'currency': 'COP', 'user_id': '1'}
+2025-04-12 12:21:12,820 [INFO] Created new user with id 3
+2025-04-12 12:21:12,821 [WARNING] [Row 23] Invalid amount value: n — Data: {'date': '2023-09-11', 'description': 'Transaction 23', 'amount': 'n', 'category': 'Entertainment', 'payment_method': 'Debit Card', 'transaction_type': 'income', 'currency': 'COP', 'user_id': '2'}
+2025-04-12 12:21:12,821 [WARNING] [Row 27] Invalid transaction_type: otro — Data: {'date': '2023-03-01', 'description': 'Transaction 27', 'amount': '807.08', 'category': 'Rent', 'payment_method': 'Cash', 'transaction_type': 'otro', 'currency': 'EUR', 'user_id': '3'}
