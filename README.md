@@ -1,68 +1,58 @@
 # 🕵️‍♂️ Flask Fraud Detection API
 
-Este proyecto es una API construida con **Flask** para la gestión de transacciones financieras, con un sistema integrado de **detección de fraudes**. También permite importar datos desde archivos CSV y simula colas de tareas similares a Google Cloud Tasks.
+his project is an API built with **Flask** for managing financial transactions, with an integrated **fraud detection** system. It also allows importing data from CSV files and simulates task queues similar to Google Cloud Tasks.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🚀 Main Features
 
-project-root/
-│
-├── app/
-│   ├── __init__.py
-│   ├── routes.py
-│   ├── models.py
-│   ├── services/
-│   ├── fraud_detector.py
-│   ├── transaction_importer.py
-│   ├── utils/
-│   ├── logger.py
-├── requirements.txt             # Librerías necesarias
-├── Dockerfile                   # Instrucciones para construir la imagen
-├── .dockerignore                # Archivos que no se deben copiar al contenedor
-├── run.py                      # Punto de entrada a la app
-├── tests/ 
-│   ├── __init__.py
-│   ├── test_views.py
-├── .gitignore
-├── .env                      # variables de entorno
-
-## 🚀 Características principales
-
-- ✅ Importación de transacciones desde archivos CSV
-- ✅ Asociación automática de transacciones a usuarios
-- ✅ Reglas de detección de fraude:
-  - Más de 3 transacciones en menos de 1 minuto
-  - Transacción mayor a $5000
-  - Transacciones desde países distintos en menos de 5 minutos
-- ✅ Simulación de Google Cloud Tasks
-- ✅ API REST para disparar y procesar detección de fraude
-- ✅ Soporte para despliegue en **Google Cloud Run**
-- ✅ Logger centralizado
-- ✅ Pruebas unitarias con `unittest` + `Flask test client`
+- ✅ Transaction import from CSV files
+- ✅ Automatic association of transactions to users
+- ✅ Fraud detection rules:
+  - More than 3 transactions in less than 1 minute
+  - Transaction greater than $5000
+  - Transactions from different countries in less than 5 minutes
+- ✅ Google Cloud Tasks simulation
+- ✅ REST API to trigger and process fraud detection
+- ✅ Support for deployment on **Google Cloud Run**
+- ✅ Centralized logger
+- ✅ Unit tests with `unittest` + `Flask test client`
 
 ---
 
-## ⚙️ Instalación local
+## ⚙️ Local Installation
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/tuusuario/flask-fraud-api.git
 cd flask-fraud-api
+```
 
-### 2. Crear entorno virtual e instalar dependencias
+
+### 2. Create virtual environment and install dependencies
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
-### 3. Crear archivo .env en la ruta del programa con las siguientes variables
+### 3. Create .env file in the program's path with the following variables
 FLASK_ENV=development
 SECRET_KEY=technicaltest2025
 DATABASE_URL=sqlite:///app.db
 
-### 4. Ejecuta la aplicacion
+### 4. Run the application
 ```bash
 python run.py
+```
+
+---
+
+## ⚙️ Main Endpoints
+Method	Path	        Description
+POST	/upload	        Upload CSV file
+POST	/detect-fraud	Detect suspicious transactions
+POST	/tasks	        Simulate Google Cloud Task
+POST	/process-fraud	Process and save a suspicious transaction
