@@ -1,14 +1,17 @@
 from .services.transaction_importer import import_transactions_from_csv
 from .services.fraud_detector import detect_fraudulent_transactions
+from .services.fraud_detector import forward_to_process_fraud
+from .services.fraud_detector import save_suspicious_transactions
 
 from flask import Blueprint, render_template, request, jsonify
 
 from io import TextIOWrapper
 
-import threading
-import requests
+from concurrent.futures import ThreadPoolExecutor
+#ThreadPoolExecutor implementar
 
 main = Blueprint('main', __name__)
+executor = ThreadPoolExecutor(max_workers=5)
 
 @main.route('/')
 def home():
@@ -39,14 +42,13 @@ def upload_file():
             return "No file was uploaded", 400
 
         wrapped_file = TextIOWrapper(file, encoding='utf-8')
-        user_id = 1  # Temporal
 
         try:
             success_count, error_rows = import_transactions_from_csv(wrapped_file)
 
             if error_rows:
                 error_msg = f"{success_count} transactions imported. {len(error_rows)} rows failed."
-                print("Errores encontrados:")
+                print("Errors found:")
                 for i, err, row in error_rows:
                     print(f"Row {i}: {err} — {row}")
                 return error_msg, 207  # 207: Multi-Status (partially success)
@@ -57,6 +59,7 @@ def upload_file():
             return f"Import failed: {e}", 500
 
     return render_template('upload.html')
+
 
 @main.route('/detect-fraud', methods=['POST'])
 def detect_fraud():
@@ -70,6 +73,7 @@ def detect_fraud():
     count = detect_fraudulent_transactions()
     return {"message": f"{count} suspicious transactions detected."}, 200
 
+
 @main.route('/tasks', methods=['POST'])
 def simulate_task_queue():
     """
@@ -78,35 +82,46 @@ def simulate_task_queue():
     """
     data = request.get_json()
     if not data:
-        return jsonify({"error": "Invalid payload"}), 400
+        return jsonify({"error": "Invalid payload"}), 415
 
     # Dispatch asynchronously
-    thread = threading.Thread(target=forward_to_process_fraud, args=(data,))
-    thread.start()
+    executor.submit(forward_to_process_fraud, data)
 
     return jsonify({"message": "Task accepted and will be processed"}), 202
-
-def forward_to_process_fraud(data):
-    """
-    Sends the task payload to the /process-fraud endpoint asynchronously.
-    """
-    try:
-        requests.post("http://localhost:5000/process-fraud", json=data)
-        print(f"Task dispatched to /process-fraud: {data}")
-    except Exception as e:
-        print(f"Failed to forward task: {e}")
 
 
 @main.route('/process-fraud', methods=['POST'])
 def process_fraud():
     """
     Endpoint to process a fraudulent transaction that was enqueued via the task queue.
+
+    This endpoint expects a JSON payload with at least the following fields:
+    - transaction_id (str or int)
+    - user_id (str or int)
+    - reason (str)
+    - date (str, format 'YYYY-MM-DD HH:MM:SS')
+
+    Returns:
+        - 200 OK if the transaction was successfully saved.
+        - 400 Bad Request if the payload is missing or incomplete.
+        - 500 Internal Server Error if saving fails due to an unexpected error.
     """
     data = request.get_json()
-    transaction_id = data.get('transaction_id')
-    reason = data.get('reason')
 
-    print(f"🚨 Processing fraud case: Transaction {transaction_id} - Reason: {reason}")
-    # Aquí puedes extender la lógica para alertas, auditorías, etc.
+    # Check if any data was received
+    if not data:
+        return jsonify({"error": "No data received"}), 200
 
-    return '', 200
+    # Required fields for a suspicious transaction
+    required_fields = ['transaction_id', 'user_id', 'reason', 'date']
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
+
+    try:
+        message = save_suspicious_transactions(data)
+        print(message)
+        return jsonify({"message": message}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to process fraud: {str(e)}"}), 500

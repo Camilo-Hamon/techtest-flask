@@ -8,7 +8,7 @@ import os
 # Create the SQLAlchemy instance
 db = SQLAlchemy()
 
-def create_app():
+def create_app(testing=False):
     """
     Flask application factory function.
 
@@ -29,7 +29,7 @@ def create_app():
 
     if env == 'production':
         app.config.from_object('config.ProductionConfig')
-    elif env == 'testing':
+    elif env == 'testing' or testing:
         app.config.from_object('config.TestingConfig')
     else:
         app.config.from_object('config.DevelopmentConfig')

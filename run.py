@@ -1,8 +1,5 @@
 from app import create_app, db
 
-from app.models import User
-from app.models import Transaction
-
 app = create_app()
 
 if __name__ == '__main__':

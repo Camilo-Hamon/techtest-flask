@@ -24,19 +24,16 @@ class Transaction(db.Model):
 
     Each transaction is linked to a specific user.
     """
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, nullable=False)
-    description = db.Column(db.String(255), nullable=False)
+    transaction_id = db.Column(db.Integer, primary_key=True)
+    #transaction_id = db.Column(db.Integer, nullable=False)
     amount = db.Column(db.Float, nullable=False)
-
-    category = db.Column(db.String(100), nullable=True)
-    payment_method = db.Column(db.String(50), nullable=True)
-    transaction_type = db.Column(db.String(20), nullable=True)  # "income" or "expense"
     currency = db.Column(db.String(10), nullable=True, default="USD")
     location_country = db.Column(db.String(100), nullable=True)
+    date = db.Column(db.DateTime, nullable=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # Suspicion fields
+    is_suspicious = db.Column(db.Boolean, default=False)
+    reason = db.Column(db.String(255), nullable=True)
 
     # Foreign key to User
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

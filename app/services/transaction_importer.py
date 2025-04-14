@@ -7,29 +7,57 @@ from .. import db
 from datetime import datetime
 import csv
 
-def validate_transaction_row(row):
-    required_fields = ['date', 'description', 'amount']
 
+def validate_transaction_row(row):
+    """
+    Validates a dictionary representing a transaction row from a CSV file.
+
+    This function ensures that required fields are present, that the `amount` is a valid number,
+    and that the `date` field matches the expected datetime format.
+
+    Parameters:
+    ----------
+    row : dict
+        A dictionary representing a single transaction row, typically parsed from a CSV file.
+
+    Returns:
+    -------
+    tuple
+        A tuple in the form (is_valid, error_message). 
+        - If the row is valid, returns (True, None).
+        - If invalid, returns (False, error_message) with a description of the validation issue.
+
+    Expected Fields:
+    ----------------
+    - 'transaction_id' : str or int
+    - 'user_id'        : str or int
+    - 'amount'         : float-compatible string
+    - 'currency'       : string
+    - 'timestamp'      : string in format '%Y-%m-%d %H:%M:%S'
+    """
+
+    required_fields = ['transaction_id', 'user_id',
+                       'amount', 'currency', 'timestamp']
+
+    # Check required fields are present and not empty
     for field in required_fields:
         if not row.get(field):
             return False, f"Missing required field: {field}"
 
+    # Validate amount is a number
     try:
         float(row['amount'])
     except ValueError:
         return False, f"Invalid amount value: {row['amount']}"
 
-    # Validate transaction_type
-    if row.get('transaction_type') and row['transaction_type'] not in ['income', 'expense']:
-        return False, f"Invalid transaction_type: {row['transaction_type']}"
-
-    # Validate date format
+    # Validate timestamp format
     try:
-        datetime.strptime(row['date'], '%Y-%m-%d %H:%M:%S')  # Example: 2024-12-31
+        datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S')
     except ValueError:
-        return False, f"Invalid date format: {row['date']} (expected YYYY-MM-DD HH:MM:SS)"
+        return False, f"Invalid timestamp format: {row['timestamp']} (expected YYYY-MM-DD HH:MM:SS)"
 
     return True, None
+
 
 def import_transactions_from_csv(file_stream):
     """
@@ -60,6 +88,8 @@ def import_transactions_from_csv(file_stream):
 
         try:
             user_id = int(row['user_id'])
+            date_str = row['timestamp']
+            parsed_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
 
             # Check if user is already known/created in this session
             if user_id not in known_users:
@@ -74,20 +104,16 @@ def import_transactions_from_csv(file_stream):
                     logger.info(f"Created new user with id {user_id}")
                 known_users[user_id] = user  # Cache user
 
-            date_str = row['date']
-            parsed_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-
             # Create transaction
             transaction = Transaction(
-                date=parsed_date,
-                description=row['description'],
+                transaction_id=float(row['transaction_id']),
+                user_id=user_id,
                 amount=float(row['amount']),
-                category=row.get('category'),
-                payment_method=row.get('payment_method'),
-                transaction_type=row.get('transaction_type'),
                 currency=row.get('currency', 'USD'),
-                location_country=row.get('location_country'),
-                user_id=user_id
+                location_country=row.get('country'),
+                date=parsed_date,
+                is_suspicious=bool(row['is_suspicious']),
+                reason=row.get('reason')
             )
             transactions.append(transaction)
 
