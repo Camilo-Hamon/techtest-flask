@@ -16,7 +16,7 @@ his project is an API built with **Flask** for managing financial transactions, 
 - ✅ REST API to trigger and process fraud detection
 - ✅ Support for deployment on **Google Cloud Run**
 - ✅ Centralized logger
-- ✅ Unit tests with `unittest` + `Flask test client`
+- ✅ Unit tests with `unittest`
 
 ---
 
@@ -25,8 +25,8 @@ his project is an API built with **Flask** for managing financial transactions, 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/tuusuario/flask-fraud-api.git
-cd flask-fraud-api
+git clone https://github.com/Camilo-Hamon/techtest-flask.git
+cd techtest-flask
 ```
 
 
@@ -51,8 +51,63 @@ python run.py
 ---
 
 ## ⚙️ Main Endpoints
-Method	Path	        Description
-POST	/upload	        Upload CSV file
-POST	/detect-fraud	Detect suspicious transactions
-POST	/tasks	        Simulate Google Cloud Task
-POST	/process-fraud	Process and save a suspicious transaction
+
+| Method | Path          | Description                                    |
+|--------|---------------|------------------------------------------------|
+| POST   | /upload       | Upload CSV file with transactions.         |
+| POST   | /detect-fraud | Trigger detection of suspicious transactions. |
+| POST   | /tasks        | Simulate asynchronous task execution.        |
+| POST   | /process-fraud| Process and save transactions marked as suspicious. |
+
+## ⚙️ Deployment on Google Cloud Run
+
+### Configure GCP
+
+```bash
+gcloud config set project TU_ID_PROYECTO
+gcloud config set run/region us-central1
+gcloud services enable run.googleapis.com artifactregistry.googleapis.com
+```
+### Create Docker repository on GCP
+
+```bash
+gcloud artifacts repositories create my-repo \
+    --repository-format=docker \
+    --location=us-central1
+```
+
+### Build and upload image
+
+```bash
+gcloud builds submit --tag us-central1-docker.pkg.dev/TU_ID_PROYECTO/my-repo/flask-app
+```
+
+### Deploy to Cloud Run
+
+```bash
+gcloud run deploy flask-app \
+  --image us-central1-docker.pkg.dev/TU_ID_PROYECTO/my-repo/flask-app \
+  --platform managed \
+  --allow-unauthenticated \
+  --region us-central1
+
+```
+
+### Update environment variables (if applicable)
+
+```bash
+gcloud run services update flask-app \
+  --update-env-vars DATABASE_URL="..."
+```
+
+
+
+---
+
+Pending update instructions to build an run in docker
+
+docker run -p 8080:8080 \
+    -e FLASK_ENV=development \
+    -e SECRET_KEY=technicaltest2025 \
+    -e DATABASE_URL=sqlite:///app.db \
+    image-technical-test
