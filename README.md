@@ -20,6 +20,18 @@ This project is an API built with **Flask** for managing financial transactions,
 
 ---
 
+### 📁 Project Module Overview
+
+| Module Path                             | Description |
+|----------------------------------------|-------------|
+| `app/models.py`                         | Defines the SQLAlchemy models (`User`, `Transaction`, and `SuspiciousTransaction`). These represent the core database tables and their relationships. |
+| `app/routes.py`                         | Contains all Flask route handlers. It includes endpoints for uploading transactions, detecting fraud, and processing suspicious transaction tasks. |
+| `app/services/fraud_detector.py`       | Handles the logic to detect fraudulent transactions using predefined rules. Flags suspicious transactions and sends them to be processed asynchronously. |
+| `app/services/transaction_importer.py` | Manages CSV file processing and imports transactions into the database. Automatically creates users if they don’t exist. |
+| `app/utils/logger.py`                  | Configures and provides a centralized logger instance for consistent and formatted application logging. |
+
+---
+
 ## ⚙️ 🚀 Deploy with Docker (option 1)
 
 ### 1. Build the Docker Image

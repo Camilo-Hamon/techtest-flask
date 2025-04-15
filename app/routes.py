@@ -61,6 +61,14 @@ def upload_file():
     return render_template('upload.html')
 
 
+@main.route('/detect-fraud', methods=['GET'])
+def detect_fraud_get():
+    """
+    Renders a simple page with a button to manually trigger fraud detection.
+    """
+    return render_template('detect_fraud.html')
+
+
 @main.route('/detect-fraud', methods=['POST'])
 def detect_fraud():
     """
