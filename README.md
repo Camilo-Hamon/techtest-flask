@@ -20,7 +20,41 @@ This project is an API built with **Flask** for managing financial transactions,
 
 ---
 
-## ⚙️ Local Installation (option 1)
+## ⚙️ 🚀 Deploy with Docker (option 1)
+
+### 1. Build the Docker Image
+
+```bash
+docker build . -t image-technical-test
+```
+### 2. Run the Docker Container
+
+```bash
+docker run -d --name ct-technical-test -p 8080:8080 \  
+    -e FLASK_ENV=development \  
+    -e SECRET_KEY=technicaltest2025 \  
+    -e DATABASE_URL=sqlite:///app.db \  
+    image-technical-test
+```
+
+### 🧾 Docker Run Command Explanation
+
+| Argument                       | Description                                                                 |
+|-------------------------------|-----------------------------------------------------------------------------|
+| `-d`                          | Runs the container in **detached mode** (in the background).               |
+| `--name ct-technical-test`    | Names the container **ct-technical-test**.                                 |
+| `-p 8080:8080`                | Maps port **8080** on your machine to port **8080** in the container.       |
+| `-e`                          | Sets **environment variables** needed for the Flask app to run.            |
+| `image-technical-test`        | The name of the **Docker image** built in the previous step.               |
+
+
+### Stopping the Container
+
+```bash
+docker stop ct-technical-test && docker rm ct-technical-test
+```
+
+## ⚙️ Local Installation (option 2)
 
 ### 1. Clone the repository
 
@@ -39,9 +73,9 @@ pip install -r requirements.txt
 ```
 
 ### 3. Create .env file in the program's path with the following variables
-FLASK_ENV=development
-SECRET_KEY=technicaltest2025
-DATABASE_URL=sqlite:///app.db
+FLASK_ENV=development  
+SECRET_KEY=technicaltest2025  
+DATABASE_URL=sqlite:///app.db  
 
 ### 4. Run the application
 ```bash
@@ -50,7 +84,7 @@ python run.py
 
 ---
 
-## ⚙️ Building the Docker Image and Running the Container (option 2)
+
 
 ## ⚙️ Main Endpoints
 
@@ -101,15 +135,3 @@ gcloud run deploy flask-app \
 gcloud run services update flask-app \
   --update-env-vars DATABASE_URL="..."
 ```
-
-
-
----
-
-Pending update instructions to build an run in docker
-
-docker run -p 8080:8080 \
-    -e FLASK_ENV=development \
-    -e SECRET_KEY=technicaltest2025 \
-    -e DATABASE_URL=sqlite:///app.db \
-    image-technical-test
