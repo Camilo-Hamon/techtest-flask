@@ -1,6 +1,6 @@
 # 🕵️‍♂️ Flask Fraud Detection API
 
-his project is an API built with **Flask** for managing financial transactions, with an integrated **fraud detection** system. It also allows importing data from CSV files and simulates task queues similar to Google Cloud Tasks.
+This project is an API built with **Flask** for managing financial transactions, with an integrated **fraud detection** system. It also allows importing data from CSV files and simulates task queues similar to Google Cloud Tasks.
 
 ---
 
@@ -20,7 +20,7 @@ his project is an API built with **Flask** for managing financial transactions, 
 
 ---
 
-## ⚙️ Local Installation
+## ⚙️ Local Installation (option 1)
 
 ### 1. Clone the repository
 
@@ -49,6 +49,8 @@ python run.py
 ```
 
 ---
+
+## ⚙️ Building the Docker Image and Running the Container (option 2)
 
 ## ⚙️ Main Endpoints
 
