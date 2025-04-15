@@ -85,8 +85,11 @@ python run.py
 ---
 
 
+## 📬 How to Use the API Endpoints with Postman
 
-## ⚙️ Main Endpoints
+This section explains how to interact with the main API endpoints of the project using [Postman](https://www.postman.com/).
+
+⚙️ Main Endpoints
 
 | Method | Path          | Description                                    |
 |--------|---------------|------------------------------------------------|
@@ -94,6 +97,55 @@ python run.py
 | POST   | /detect-fraud | Trigger detection of suspicious transactions. |
 | POST   | /tasks        | Simulate asynchronous task execution.        |
 | POST   | /process-fraud| Process and save transactions marked as suspicious. |
+
+---
+
+### 📤 `/upload` – Upload CSV File
+
+**Method**: `POST`  
+**URL**: `http://localhost:8080/upload`  
+**Description**: Allows you to upload a CSV file containing transactions to be imported into the database.
+
+#### 🔧 Postman Setup
+
+1. Open Postman and create a new request.
+2. Set the method to `POST` and enter the URL: `http://localhost:8080/upload`.
+3. Go to the **Body** tab.
+4. Choose **form-data**.
+5. Add a key named `file`, set its type to **File**, and upload your CSV file.
+6. Click **Send**.
+
+#### ✅ Expected Response
+
+- `200 OK` if all transactions were successfully imported.
+- `207 Multi-Status` if some rows failed and others succeeded.
+- `400 Bad Request` if no file is sent.
+- `500 Internal Server Error` if something goes wrong during processing.
+
+---
+
+### 🕵️‍♀️ `/detect-fraud` – Detect Fraudulent Transactions
+
+**Method**: `POST`  
+**URL**: `http://localhost:8080/detect-fraud`  
+**Description**: Triggers fraud detection on all stored transactions based on predefined rules.
+
+#### 🔧 Postman Setup
+
+1. Open Postman and create a new request.
+2. Set the method to `POST` and enter the URL: `http://localhost:8080/detect-fraud`.
+3. No body is needed for this request.
+4. Click **Send**.
+
+#### ✅ Expected Response
+
+- `200 OK` with a JSON response like:
+  ```json
+  {
+    "message": "5 suspicious transactions detected."
+  }
+
+---
 
 ## ⚙️ Deployment on Google Cloud Run
 
